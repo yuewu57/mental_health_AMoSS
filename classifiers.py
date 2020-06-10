@@ -125,11 +125,8 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
                 else:
                     participant_data=list_to_num(par_data)
         
-        
          
         if participant_data is not False:
-            
-
 
             if naive:
                 if missing_clean:
@@ -137,16 +134,12 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
                     x.append(np.sum(participant_data,axis=0)/minlen)
                 else:
 
-                        
                     x.append(np.sum(list_to_num(par_data),axis=0)/minlen)
 
             else:
 
-
                     x.append(iisignature.sig(participant_data, order))
             
-
-
 
             y.append(participant.diagnosis)
 
@@ -167,12 +160,11 @@ def rf_model(X_train,y_train,X_test,y_test,random_state = 42):
 
     y_test: test class
 
-    threshold: triangle coordinates
 
     Returns
     -------
 
-    x,y in appropriate form
+    confusion matrix, mean accuracy
 
 
     """
@@ -205,12 +197,11 @@ def rf_cv(X_train,y_train,X_test,y_test,random_state = 42):
 
     y_test: test class
 
-    threshold: triangle coordinates
 
     Returns
     -------
 
-    x,y in appropriate form
+    mean accuracy
 
 
 
@@ -253,9 +244,13 @@ def model_onego(Participants, minlen, training=0.7, sample_size=50, \
          Default is 50
      start_average: if the firt element is missing, replace it with average or 0
          Default False
-
-
-
+     cv: True or False
+        whether or not using cross_validation for random forest
+     cumsum: True or False
+        whether or not the piece of data is being cumulated        
+    class_: on the whole set (None) or on 0/1/2 groups
+        default: None
+    
      Returns
      -------
 
