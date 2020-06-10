@@ -91,9 +91,7 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
 
     for participant in collection:
 
-
         par_data=participant.data
-
 
         if missing_clean:
                 participant_data=clean_missing1(par_data)
@@ -133,16 +131,12 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
 
                     x.append(np.sum(participant_data,axis=0)/minlen)
                 else:
-
                     x.append(np.sum(list_to_num(par_data),axis=0)/minlen)
-
             else:
-
                     x.append(iisignature.sig(participant_data, order))
             
 
             y.append(participant.diagnosis)
-
 
     return x,y
 
@@ -171,20 +165,23 @@ def rf_model(X_train,y_train,X_test,y_test,random_state = 42):
         
 
                  
-    gridF=OneVsRestClassifier(RandomForestClassifier(n_estimators=1500,min_samples_leaf=10,max_depth=5,\
-                                      min_samples_split=2, random_state = random_state))
-
-
+    gridF=OneVsRestClassifier(RandomForestClassifier(n_estimators=1500,\
+                                                     min_samples_leaf=10,\
+                                                     max_depth=5,\
+                                                     min_samples_split=2,\
+                                                     random_state = random_state))
 
     gridF.fit(X_train, y_train)
     predicted = gridF.predict(X_test)
     CM = confusion_matrix(y_test, predicted)
+    
     return CM, accuracy(predicted, y_test)
     
     
-    
+  
     
 def rf_cv(X_train,y_train,X_test,y_test,random_state = 42):
+    
     """ random forest model
 
        Parameters
@@ -256,12 +253,9 @@ def model_onego(Participants, minlen, training=0.7, sample_size=50, \
 
      mean_accuracy: average accuracy for each case
 
-    """
-     
-    
+    """  
 
     random.seed(42)
-
     
     standardise_set=[False,True, True]
     count_set=[False, True,True]
@@ -272,15 +266,9 @@ def model_onego(Participants, minlen, training=0.7, sample_size=50, \
 
 
     order_set=[None, 2,3]
-     
-
-    col_num=len(standardise_set)
-
-        
+    col_num=len(standardise_set)    
+    
     mean_accuracy=np.zeros(col_num)
-    
-
-    
     mean_CM=[np.zeros((3,3)) for j in  range(col_num)]
     
     accuracy_collections=[[] for j in  range(col_num)]
@@ -293,15 +281,12 @@ def model_onego(Participants, minlen, training=0.7, sample_size=50, \
             #################### Test on pair of sum scores from ALTMAN+QIDS ####################
              #####################################################################################
 
-                train_set, test_set = buildData(Participants, training=training,\
-                                                minlen=minlen,class_=class_)
-
-
+                train_set, test_set = buildData(Participants,\
+                                                training=training,\
+                                                minlen=minlen,\
+                                                class_=class_)
 
                 for j in range(col_num):
-
-
-
                 
                     X_train,y_train=data_model(train_set,minlen=minlen,\
                                                order=order_set[j],\
