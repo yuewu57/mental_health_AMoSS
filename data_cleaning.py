@@ -288,3 +288,85 @@ def cleaning_sameweek_data(Participants):
     
     return Pars
 
+def buildData(collection, training=0.7,minlen=20,class_=None):
+    
+    """Builds the training and out-of-sample sets.
+    
+    
+    Parameters
+    ----------
+     collection :  data is located.
+     training : float, optional
+        Percentage of the data that will be used to
+        train the model.
+        Default is 0.7.
+
+    minlen: num
+        The least data length, default 20.
+    
+    class_: build data on class 0/1/2 only, otherwise, Nonw
+    
+    Returns
+    -------
+    list
+        Training set.
+    list
+        Out-of-sample set.
+    
+    """
+
+    
+    collection1=copy.deepcopy(collection)
+    len_data=len(collection1[0].data)
+    
+    
+    total_len=len(collection1)
+
+    jj=0
+    
+    t=0
+    
+    
+    while jj<total_len:
+        
+        min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+        
+        while min2<=minlen:
+
+            collection1.remove(collection1[jj])
+            total_len-=1
+            t+=1
+
+            min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+            
+
+                  
+            
+        random_start=random.randint(0,min2-minlen)
+
+        for i in range(len_data):
+                collection1[jj].data[i]=collection1[jj].data[i][random_start:random_start+minlen]
+                
+                collection1[jj].time[i]=collection1[jj].time[i][random_start:random_start+minlen]
+                
+        jj+=1
+
+                
+    collection2=[]
+    
+    if class_ is not None:
+        for par in collection1:
+            if par.diagnosis==class_:
+                collection2.append(par)
+    else:
+        collection2=collection1
+        
+  
+    random.shuffle(collection2)
+    training_set = collection2[:int(training*len(collection2))]
+
+    out_of_sample = collection2[int(training*len(collection2)):]
+    
+    
+    return training_set, out_of_sample
+
