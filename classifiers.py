@@ -24,16 +24,6 @@ def distance(p,p0):
 
 
 
-
-def accuracy1(x,y):
-    mean=0
-    for i in range(len(x)):
-        if x[i][0]==y[i][0] and x[i][1]==y[i][1]:
-            mean+=1
-      
-    return mean/len(x)
-
-
 def accuracy(x,y):
     mean=0
     for i in range(len(x)):
@@ -54,10 +44,38 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
     collection : list
         The out-of-sample set.
 
-    threshold : array
     order : int, optional
         Order of the signature.
         Default is 2.
+        
+    minlen: int
+        the length of data considered for each patient.
+        Default is 20.
+    
+    standardise: True or False
+        whether or not the piece of data being standardised
+
+    count: True or False
+        whether or not the piece of data being counted for missing value
+    
+    feedforward: True or False
+        whether or not the missing values in the piece of data is filled by feedforward function
+        
+    missing_clean:True or False
+        whether or not the missing values in the piece of data is to be cleaned
+    
+    start_average: True or False
+        whether or not the missing values at the beginning of the piece of data is filled by the average
+
+    naive: True or False
+        whether or not the navid method (by calculating the mean) is implemented
+
+    time: True or False
+        whether or not the time is included 
+    
+    cumsum: True or False
+        whether or not the piece of data is being cumulated
+
 
     Returns
     -------
