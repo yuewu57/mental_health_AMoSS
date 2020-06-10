@@ -99,27 +99,46 @@ def data_model(collection, order=2,minlen=20, standardise=True, count=True, feed
             if standardise:
 
                 participant_data=normalise(feed_forward(par_data,\
-                count=count, time=time,start_average=start_average,cumsum=cumsum),\
-                cumsum=cumsum, count=count,time=time)
+                                                        count=count,\
+                                                        time=time,\
+                                                        start_average=start_average,\
+                                                        cumsum=cumsum),\
+                                           cumsum=cumsum,\
+                                           count=count,\
+                                           time=time)
 
             else:
 
                 participant_data=feed_forward(par_data,\
-                count=count, time=time,start_average=start_average,cumsum=cumsum)
+                                              count=count,\
+                                              time=time,\
+                                              start_average=start_average,\
+                                              cumsum=cumsum)
 
         else:
             if standardise:
                 if feedforward:                
                     participant_data=normalise(feed_forward(par_data,\
-                        count=count,time=time,start_average=start_average,cumsum=cumsum),\
-                        cumsum=cumsum, count=count,time=time)
+                                                            count=count,\
+                                                            time=time,\
+                                                            start_average=start_average,\
+                                                            cumsum=cumsum),\
+                                               cumsum=cumsum,\
+                                               count=count,\
+                                               time=time)
 
                 else:
-                    participant_data=normalise(list_to_num(par_data),count=count,time=time,cumsum=cumsum)
+                    participant_data=normalise(list_to_num(par_data),\
+                                               count=count,\
+                                               time=time,\
+                                               cumsum=cumsum)
             else:
                 if feedforward:
-                        participant_data=feed_forward(par_data,count=count,time=time,\
-                                                      start_average=start_average,cumsum=cumsum)
+                        participant_data=feed_forward(par_data,\
+                                                      count=count,\
+                                                      time=time,\
+                                                      start_average=start_average,\
+                                                      cumsum=cumsum)
                 else:
                     participant_data=list_to_num(par_data)
         
@@ -147,13 +166,9 @@ def rf_model(X_train,y_train,X_test,y_test,random_state = 42):
        Parameters
     ----------
     X_train : training set
-
     y_train : training class
-
     X_test : test set
-
     y_test: test class
-
 
     Returns
     -------
@@ -187,20 +202,14 @@ def rf_cv(X_train,y_train,X_test,y_test,random_state = 42):
        Parameters
     ----------
     X_train : training set
-
     y_train : training class
-
     X_test : test set
-
     y_test: test class
-
 
     Returns
     -------
 
     mean accuracy
-
-
 
 
     """
