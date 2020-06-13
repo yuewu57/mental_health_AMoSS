@@ -304,7 +304,7 @@ def buildData(collection, training=0.7,minlen=20,class_=None):
     minlen: num
         The least data length, default 20.
     
-    class_: build data on class 0/1/2 only, otherwise, Nonw
+    class_: build data on class 0/1/2 only, otherwise, None
     
     Returns
     -------
@@ -367,6 +367,267 @@ def buildData(collection, training=0.7,minlen=20,class_=None):
 
     out_of_sample = collection2[int(training*len(collection2)):]
     
+    
+    return training_set, out_of_sample
+
+
+def cutoff(a,feature):
+    """
+    cutoff rule: 
+      1. ASRM: 0 for missing values; 1 for normal ASRM score(0-10); 2 for manic score (>11)
+  
+    """
+    if feature==int(1):
+        if a<0:
+            return int(0)
+        elif a>10:
+            return int(2)
+        else:
+            return int(1)
+        
+    elif feature==int(0):
+        if a<0:
+            return int(0)
+        elif a>5:
+            return int(2)
+        else:
+            return int(1)
+
+
+def cutoff_list(a,feature=int(0)):
+    """
+      for list a, apply function cutoff to each element
+    """
+    for i in range(len(a)):
+        a[i]=cutoff(a[i],feature=feature)
+
+    return a
+
+
+def scaling(a,feature):
+
+    """
+      Mapping raw ASRM/QIDS score to severity of symptoms 0-4 
+    
+    """
+
+    if feature==int(1):
+        if np.abs(a-2.75)<=2.75:
+            return int(0)
+        elif np.abs(a-8)<=2.5:
+            return int(1)
+        elif np.abs(a-13)<=2.5:
+                return int(2)
+        elif np.abs(a-18)<=2.5:
+                return int(3)
+        else:
+                return int(4)
+        
+    elif feature==int(0):
+        if a<=5.5:
+            return int(0)
+        elif np.abs(a-7.5)<=2:
+            return int(1)
+        elif np.abs(a-11.5)<=2:
+            return int(2)
+        elif np.abs(a-15.5)<=2:
+            return int(3)
+        else:
+            return int(4)        
+
+
+def scaling_list(a,feature=int(0)):
+    
+    """
+      for list a, apply function scaling to each element
+    """
+    
+    b=np.zeros(len(a))
+    for i in range(len(a)):
+        b[i]=scaling(a[i],feature=feature)
+
+    return list(b)
+
+
+def buildData_prediction(collection, training=0.7,minlen=10,regression=False,class_=None):
+
+    """
+    
+            Builds the training and out-of-sample sets for prediction tasks.
+
+
+    Parameters
+    ----------
+     collection :  data is located.
+     training : float, optional
+        Percentage of the data that will be used to
+        train the model.
+        Default is 0.7.
+
+    regression: whether use regressor-based prediction
+        Default: False
+    Returns
+    -------
+    list
+        Training set.
+    list
+        Out-of-sample set.
+
+    """
+
+    collection1=copy.deepcopy(collection)
+    len_data=len(collection1[0].data)
+    total_len=len(collection1)
+
+    jj=0
+    t=0
+
+    while jj<total_len:
+
+        min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+
+        while min2<=minlen+1:
+
+            collection1.remove(collection1[jj])
+            total_len-=1
+            t+=1
+            min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+
+        random_start=random.randint(0,min2-minlen-1)
+        if regression:
+            collection1[jj].nextdata=[int(collection1[jj].data[0][random_start+minlen]),\
+                                      int(collection1[jj].data[1][random_start+minlen])]
+        else:
+            collection1[jj].nextdata=[cutoff(int(collection1[jj].data[0][random_start+minlen]),int(0)),\
+                                        cutoff(int(collection1[jj].data[1][random_start+minlen]),int(1))]
+
+
+        collection1[jj].data[0]=collection1[jj].data[0][random_start:random_start+minlen]
+        collection1[jj].data[1]=collection1[jj].data[1][random_start:random_start+minlen]
+        
+        for i in range(len_data):
+            collection1[jj].time[i]=collection1[jj].time[i][random_start:random_start+minlen]
+
+        jj+=1
+
+    collection2=[]
+
+    if class_ is not None:
+        for par in collection1:
+            if par.diagnosis==class_:
+                collection2.append(par)
+    else:
+        collection2=collection1
+
+
+    random.shuffle(collection2)
+    training_set = collection2[:int(training*len(collection2))]
+
+    out_of_sample = collection2[int(training*len(collection2)):]
+
+    
+    return training_set, out_of_sample
+
+        
+    
+
+def buildData_prediction_nomissing(collection, training=0.7,minlen=10,class_=None):
+
+    """
+    
+        Builds the training and out-of-sample sets for the score-prediction task (Section 2.4.3).
+
+
+    Parameters
+    ----------
+     collection :  data is located.
+     training : float, optional
+        Percentage of the data that will be used to
+        train the model.
+        Default is 0.7.
+    
+    minlen: num
+        The least data length, default 20.
+    
+    class_: build data on class 0/1/2 only, otherwise, None
+    
+    Returns
+    -------
+    list
+        Training set.
+    list
+        Out-of-sample set.
+
+    """
+
+
+    collection1=copy.deepcopy(collection)
+    len_data=len(collection1[0].data)
+    total_len=len(collection1)
+
+    jj=0
+    t=0
+
+    while jj<total_len:
+
+        min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+
+        while min2<=minlen+1:
+
+            collection1.remove(collection1[jj])
+            total_len-=1
+            t+=1
+
+            min2=np.min([len(collection1[jj].data[i]) for i in range(len_data)])
+
+        valid_indices1=np.where(np.array(collection1[jj].data[0]>=0))[0]
+        valid_indices2=np.where(np.array(collection1[jj].data[1]>=0))[0]
+        valid_indices=np.intersect1d(valid_indices1,valid_indices2)
+        indice_indice=np.where(valid_indices>minlen-1)[0]        
+        
+        while len(indice_indice)==0:
+            collection1.remove(collection1[jj])      
+            total_len-=1
+            t+=1
+            if jj==total_len:
+                break
+            
+            ## Check if valid score in the next report
+            valid_indices1=np.where(np.array(collection1[jj].data[0]>=0))[0]
+            valid_indices2=np.where(np.array(collection1[jj].data[1]>=0))[0]
+            valid_indices=np.intersect1d(valid_indices1,valid_indices2)
+            indice_indice=np.where(valid_indices>minlen-1)[0]
+                    
+        if jj==total_len:
+                break
+        if len(indice_indice)==1:
+            random_end=int(0)
+        else:
+            random_end=random.randint(0,len(indice_indice)-1)
+        indice_end=valid_indices[indice_indice[random_end]]
+        collection1[jj].nextdata=[int(collection1[jj].data[0][indice_end]),\
+                                  int(collection1[jj].data[1][indice_end])]
+        
+        collection1[jj].data[0]=collection1[jj].data[0][indice_end-minlen:indice_end]
+        collection1[jj].data[1]=collection1[jj].data[1][indice_end-minlen:indice_end]
+        for i in range(len_data):
+            collection1[jj].time[i]=collection1[jj].time[i][indice_end-minlen:indice_end]        
+
+        jj+=1
+      
+    collection2=[]
+
+    if class_ is not None:
+        for par in collection1:
+            if par.diagnosis==class_:
+                collection2.append(par)
+    else:
+        collection2=collection1
+
+    random.shuffle(collection2)
+    training_set = collection2[:int(training*len(collection2))]
+    out_of_sample = collection2[int(training*len(collection2)):]
+
     
     return training_set, out_of_sample
 
