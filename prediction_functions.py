@@ -241,20 +241,7 @@ def accuracy_(x,y):
 
     return mean/len(x)
 
-def MSE(c,d,feature=int(0)):
-    """    
-          Computing the mean squared error for two lists of lists c and d
- 
-    """    
-    a = [item for sublist in c for item in sublist]
-    b= [item for sublist in d for item in sublist]     
-    
-    if len(a)!=len(b):
-        print("something is wrong.")
-    else:
 
-        sd=np.array([(a[i]-b[i])**2 for i in range(len(a))])
-        return np.sqrt(np.mean(sd))
  
  
 def MAE(c,d,feature=int(0),scaling=False):
@@ -277,17 +264,7 @@ def MAE(c,d,feature=int(0),scaling=False):
         
         return len(np.where(sd<1)[0])/len(sd), np.mean(sd)
     
-
-def R2(c,d,feature=int(0)):
-    """    
-          Computing the mean r2 error of two lists of lists c and d
- 
-    """          
-    a=np.array([r2_score(c[i], d[i]) for i in range(len(c))])
-
-    return np.mean(a)
     
-
 
 
     
@@ -407,43 +384,44 @@ def comprehensive_nomissing_model(Participants,\
                                   minlen=10,\
                                   training=0.7,\
                                   sample_size=10,\
-                                  scaling=True,\
+                                  scaling=False,\
                                   cumsum=True):
 
 
-    """trying models with different parameters in len(set) or order.
+    """
+            trying models (stateMRSPM, level 2, naive model) with different parameters in len(set) or order in one-go.
 
     Parameters
     ----------
     Participants: class of participants for the corresponding 2 tests
-
+    
+    class_: which class we are working on (0/1/2)
+    
     minlen_set : list
         size of each participant data.
-    order_set: int array or None
-        order-size set.
+
     training : scalar
         Training set proportional.
+        
     sample_size: number for loop
         Default is 50
-        standardise: data whether or not standardised
-        Default True
-    count: missing data count or not
-        Default True
-    missing_clean: rulling out missing data or not
-        Default False
-    start_average: if the firt element is missing, replace it with average or 0
-        Default False
-        concatenation: cancatenated with absolute value of initial values
-        Default False
-    naive: using merely mean value of each dimension
-    hour: adding hour/24
+    
+    scaling: if severity of symptoms being considered
+      Defalt: False (directly predicting raw scores),
+              otherwise True (scaling the predicted score to severity of symptoms)
+    
+    cumsum: a parameter in data-transforming step, can be set to True for all models
 
     Returns
     -------
 
-    mean_accuracy: average accuracy for each case
-
+    accuracy: average accuracy for each case
+    mae: average MAE for each case
+    
+    
+    
     """
+
 
 
     random.seed(42)
@@ -528,18 +506,14 @@ def comprehensive_nomissing_model(Participants,\
         for ii in range(len(feature_set)):
             current_index=int(j*len(feature_set)+ii)
 
-            mse[ii,j]=MSE(y_pred_collections[current_index],\
-                          y_collections[current_index],\
-                          feature=feature_set[ii])
+
             
             accuracy[ii,j],mae[ii,j]=MAE(y_pred_collections[current_index],\
                                          y_collections[current_index],\
                                          feature=feature_set[ii])
             
-            r2[ii,j]=R2(y_pred_collections[current_index],\
-                        y_collections[current_index],\
-                        feature=feature_set[ii])
 
-    return accuracy, mse, mae, r2
+
+    return accuracy, mae
 
 
