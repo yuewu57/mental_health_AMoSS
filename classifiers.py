@@ -236,7 +236,8 @@ def rf_cv(X_train,y_train,X_test,y_test,random_state = 42):
 def model_onego(Participants, minlen, training=0.7, sample_size=50, \
                 start_average=False, cv=False,cumsum=True, class_=None):
 
-    """trying models with different parameters in len(set) or order.
+    """
+            trying models with different parameters in len(set) or order in one-go.
 
      Parameters
      ----------
