@@ -3,7 +3,7 @@ This repository stores the resources to rework on ASRM/QIDS data collected from 
 
 Basically, the analysis is signature-based. <sup>2<sup> 
   
-All the results are contained in preprint **Deriving information from missing data: implications for mood prediction**
+All the results are contained in preprint **Deriving information from missing data: implications for mood prediction**.
   
 Getting Started
 ---------------
