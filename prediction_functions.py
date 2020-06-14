@@ -323,8 +323,7 @@ def comprehensive_model(Participants,\
     y_pred_collections=[[] for i in range(int(len(feature_set)*len(standardise_set)))]
     
     accuracy=np.zeros((len(feature_set),len(standardise_set)))
-    mse=np.zeros((len(feature_set),len(standardise_set)))
-    mae=np.zeros((len(feature_set),len(standardise_set)))
+
     
     for i in range(sample_size):
       
