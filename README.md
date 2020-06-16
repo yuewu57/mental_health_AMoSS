@@ -21,7 +21,7 @@ Patient Group
 |Bipolar|2|
 
 
-XX.py structure
+XX.py Structure
 ---------------
 | File    | Task| Section in manuscript|
 |----------|------------|--------|
@@ -33,7 +33,7 @@ XX.py structure
 |``prediction_functions.py``| prediction for classification |Sec 2.4.1 and Sec 2.4.3|
 |``prediction_spectrum_functions.py``| spectrum plots for prediction |Sec 2.4.2|
 
-Notebooks for results
+Notebooks for Results
 ---------------
 The results have been collected and shown in different jupyter notebooks.
 
