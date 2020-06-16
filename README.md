@@ -12,6 +12,15 @@ Once the repo has been cloned locally, setup a python environment with ``python=
 
 As the data were collected pre-GDPR and contained sensitive personal data, it cannot be placed into a publicly accessible repository. Requests for access to the data can be made to the data controller G.M.Goodwin. 
 
+Patient Group
+---------------
+| Diagnosis Group   |  Class|
+|------------|--------|
+|Borderline|0|
+|Healthy|1|
+|Bipolar|2|
+
+
 XX.py structure
 ---------------
 | File    | Task| Section in manuscript|
