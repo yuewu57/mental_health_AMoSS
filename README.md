@@ -30,7 +30,7 @@ XX.py Structure
 |``classifiers.py``| classification |Sec 2.3|
 |``ROC_functions.py``| ROC plots |Sec 2.3|
 |``spectrum_functions.py``| spectrum plots for classification|Sec 2.3.1|
-|``prediction_functions.py``| prediction for classification |Sec 2.4.1 and Sec 2.4.3|
+|``prediction_functions.py``| prediction |Sec 2.4.1 and Sec 2.4.3|
 |``prediction_spectrum_functions.py``| spectrum plots for prediction |Sec 2.4.2|
 
 Notebooks for Results
