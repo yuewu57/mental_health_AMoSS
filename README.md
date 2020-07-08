@@ -10,7 +10,7 @@ Getting Started
 
 Once the repo has been cloned locally, setup a python environment with ``python==3.6`` and run ``pip install -r requirements.txt``.
 
-As the data were collected pre-GDPR and contained sensitive personal data, it cannot be placed into a publicly accessible repository. Requests for access to the data can be made to the data controller.
+As the data were collected pre-GDPR and contained sensitive personal data, it cannot be placed into a publicly accessible repository.
 
 Patient Group
 ---------------
